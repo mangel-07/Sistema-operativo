@@ -38,9 +38,14 @@ class ReplacementAlgorithmTests(unittest.TestCase):
             with self.subTest(raw=raw), self.assertRaises(ValueError):
                 parse_references(raw)
 
+    def test_parser_limits_reference_sequence_to_twenty(self) -> None:
+        parse_references(", ".join(str(page) for page in range(20)))
+        with self.assertRaisesRegex(ValueError, "máximo 20"):
+            parse_references(", ".join(str(page) for page in range(21)))
+
     def test_frame_count_must_be_positive_integer(self) -> None:
-        self.assertEqual(parse_frame_count("3"), 3)
-        for raw in ("0", "-1", "1.5", "x"):
+        self.assertEqual(parse_frame_count("4"), 4)
+        for raw in ("0", "-1", "5", "1.5", "x"):
             with self.subTest(raw=raw), self.assertRaises(ValueError):
                 parse_frame_count(raw)
 
